@@ -30,9 +30,23 @@ Install dependencies on windows wsl:
             gstreamer1.0-plugins-good
             
     2.2 Using Pip
-      $ python3 -m pip install --upgrade pip setuptools virtualenv
-      
- 
+      2.2.1 Install virtual environments
+        $ python3 -m pip install --upgrade pip setuptools virtualenv
+      2.2.2 Activate virtual environments
+        2.2.2.1 Windows
+          $ kivy_venv\Scripts\activate
+        2.2.2.2 Bash
+          $ source kivy_venv/Scripts/activate
+        2.2.2.3 Linux
+          $ source kivy_venv/bin/activate
+      2.2.3 Install kivi
+        $ python3 -m pip install kivy[base] kivy_examples
+      Check the installation
+        Windows:
+          python3 kivy_venv\share\kivy-examples\demo\showcase\main.py
+        Linux:
+          $ python3 kivy_venv/share/kivy-examples/demo/showcase/main.py
+
 # Used videos to learn about the matter
 Bibliography:
   https://www.youtube.com/watch?v=bMHK6NDVlCM
