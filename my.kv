@@ -1,33 +1,17 @@
 #:kivy 1.0.9
-# Code Structure works with indentation
 
-# code of MygridClass
-<MyGrid>
+<Button>:
+    font_size:40
+    color: 0.3, 0.6, 0.7, 1 # RGB color
+    size_hint: 0.3, 0.5 # width, height
 
-    name: name
-    email: email
+<FloatLayout>: # Everyhting created here will apply to every FloatLayout in the program
+    Button:
+        #pos_hint: ("x", "y", "top", "bottom", "left", "right")
+        pos_hint: {"x": 0.5, "top": 1}
+        text: "Press"
 
-    GridLayout:
-        cols: 1
-        size: root.width - 200, root.height - 200 # Adjust for the entire window
-        pos: 100, 100
-        GridLayout:
-            cols: 2
-
-            Label:
-                text: "Name: "
-            
-            TextInput:
-                id: name # id of the field, to get the value on the python file
-                multiline: False
-
-            Label:
-                text: "Email: "
-
-            TextInput:
-                id: email
-                multiline: False
-
-        Button:
-            text: "Submit: "
-            on_press: root.btn() # Reference the method in the class, use root.
+    Button:
+        id: btn2
+        text: "Me" if btn2.state == "normal" else "Pressed"
+        background_color: 0.3, 0.4, 0.5, 1
