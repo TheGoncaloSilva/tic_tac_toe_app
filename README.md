@@ -50,3 +50,4 @@ Install dependencies on windows wsl:
 # Used videos to learn about the matter
 Bibliography:
   https://www.youtube.com/watch?v=bMHK6NDVlCM
+  https://www.youtube.com/watch?v=8vD-V5jpjBo
