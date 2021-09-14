@@ -1,8 +1,150 @@
 #:kivy 1.0.9
 
-<Touch>:
-    btn: btn
+WindowManager:
+    MainWindow:
+    OptionsWindow:
+    GameWindow:
 
-    Button:
-        id: btn
-        text: "My Button"
+<MainWindow>:
+    name: "main"
+
+    FloatLayout:
+        canvas:
+            Color:
+                rgba: 192,192,192, 0.5
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        FloatLayout:
+            size: root.width, root.height/2
+
+            Label:
+                text: "Tic Tac Toe"
+                size_hint: 0.8, 0.2
+                pos_hint: {"x":0.1, "top":0.9}
+                font_size: (root.width**2 + root.height**2) / 14**4
+            Label:
+                text: "Choose your Game"
+                size_hint: 0.8, 0.2
+                pos_hint: {"x":0.1, "top":0.75}
+                font_size: (root.width**2 + root.height**2) / 14**4
+            
+        BoxLayout:
+            size_hint: None, None
+            size: 300, 75
+            center: root.center
+
+            Button:
+                id: mplayer
+                text: '1 v 1'
+                background_color: 0,0,128, 0.8
+                on_release: 
+                    app.root.current = "game" # go to other window
+                    root.manager.transition.direction = "up" # change the page transition effect
+            Button:
+                id: splayer
+                text: '1 v AI'
+                background_color: 0,128,128, 0.5
+                on_release: 
+                    app.root.current = "options" # go to other window
+                    root.manager.transition.direction = "left" # change the page transition effect
+
+<OptionsWindow>:
+    name: "options"
+
+    FloatLayout:
+        canvas:
+            Color:
+                rgba: 192,192,192, 0.5
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        FloatLayout:
+            size: root.width, root.height/2
+
+            Button:
+                text: "Easy"
+                id: easy_mode
+                size_hint: 0.8, 0.2
+                pos_hint: {"x":0.1, "top":0.9}
+                background_color: 255,215,0, 0.5
+                on_release: 
+                    app.root.current = "game" # go to other window
+                    root.manager.transition.direction = "up" # change the page transition effect
+            Button:
+                id: difficult_mode
+                text: "Difficult"
+                size_hint: 0.8, 0.2
+                pos_hint: {"x":0.1, "top":0.6}
+                background_color: 255,0,0, 0.5
+                on_release: 
+                    app.root.current = "game" # go to other window
+                    root.manager.transition.direction = "up" # change the page transition effect
+
+            Button:
+                id: back_mode
+                text: "Back"
+                size_hint: 0.8, 0.2
+                pos_hint: {"x":0.1, "top":0.3}
+                background_color: 0,128,0, 0.5
+                on_release: 
+                    app.root.current = "main" # go to other window
+                    root.manager.transition.direction = "right" # change the page transition effect
+<GameWindow>:
+    name: "game"
+
+    FloatLayout:
+        size_hint: None, None
+        size: root.width, root.height
+        pos_hint: {'x': 0, 'y': 0}
+
+        #Paint the background
+        canvas:
+            Color:
+                rgba: 192,192,192, 0.5
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                
+        FloatLayout:
+
+            Button:
+                text: "Back"
+                size_hint: None, None
+                size: 75, 50
+                pos_hint: {"x":0.01, "top":0.99}
+                on_release: 
+                    app.root.current = "main" # go to other window
+                    root.manager.transition.direction = "down" # change the page transition effect
+
+        GridLayout:
+            cols: 1
+            size_hint: None, None
+            size: root.width - 10, root.height - 130 # 65 each part at the top
+            pos: 5, 65
+
+            GridLayout:
+                cols: 3
+                rows: 3
+                size_hint: None, None
+                size: root.width - 10, root.height - 130 # 65 each part at the top
+                pos: 5, 65
+                #pos: 100, 100
+
+                Button:       
+                    text: 'Hello 1'
+                Button:
+                    text: 'World 2'
+                Button:
+                    text: 'Hello 3'
+                Button:       
+                    text: 'World 4'
+                Button:
+                    text: 'World 5'
+                Button:
+                    text: 'World 6'
+
+
+            

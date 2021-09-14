@@ -1,28 +1,26 @@
 import kivy
 from kivy.app import App
-from kivy.uix.widget import Widget
-from kivy.properties import ObjectProperty
+from kivy.lang import Builder
+from kivy.uix.screenmanager import ScreenManager, Screen
 
+class MainWindow(Screen): # Window for choosing the type of game
+    pass
 
-class Touch(Widget):
+class OptionsWindow(Screen): # window for showing the computer dificulty levels
+    pass
 
-    btn = ObjectProperty(None)
+class GameWindow(Screen): # game window (where the game occurs)
+    pass
 
-    def on_touch_down(self, touch):
-        print("Mouse Down", touch)
-        self.btn.opacity = 0.5
+class WindowManager(ScreenManager): # Transition between the windows
+    pass
 
-    def on_touch_move(self, touch):
-        print("Mouse Move", touch)
+kv = Builder.load_file("my.kv") # Now the name of the kv file does not need to mathc the class name - App
 
-    def on_touch_up(self, touch):
-        print("Mouse Up", touch)
-        self.btn.opacity = 1
-    
-
-class MyApp(App):
+class MyMainApp(App):
     def build(self):
-        return Touch()
+        self.title = 'Tic Tac Toe'
+        return kv
 
 if __name__ == "__main__":
-    MyApp().run()
+    MyMainApp().run()
