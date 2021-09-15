@@ -55,4 +55,5 @@ Related example:
 
 # Used videos to learn about the matter
 Bibliography:
-  https://www.youtube.com/watch?v=bMHK6NDVlCM
+  Playlist: https://www.youtube.com/watch?v=bMHK6NDVlCM
+  https://www.youtube.com/watch?v=etmJGFm6hYc

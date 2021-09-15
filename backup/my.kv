@@ -118,76 +118,20 @@ WindowManager:
                 on_release: 
                     app.root.current = "main" # go to other window
                     root.manager.transition.direction = "down" # change the page transition effect
-            
+        
         GridLayout:
             cols: 1
             size_hint: None, None
-            size: root.width - 20, root.height - 130 # 65 each part at the top
-            pos: 10, 65
+            size: root.width - 10, root.height - 130 # 65 each part at the top
+            pos: 5, 65
 
             GridLayout:
                 cols: 3
                 rows: 3
                 size_hint: None, None
-                size: root.width - 20, root.height - 130 # 65 each part at the top
-                pos: 10, 65
+                size: root.width - 10, root.height - 130 # 65 each part at the top
+                pos: 5, 65
                 #pos: 100, 100
-
-                Button:
-                    id: gbtn_1
-                    font_size: '40sp'       
-                    text: 'X'
-                    on_release: app.r(gbtn_1)
-                Button:
-                    id: gbtn_2
-                    font_size: '40sp'
-                    text: 'O'
-                    on_release: app.r(gbtn_2)
-                Button:
-                    id: gbtn_3
-                    font_size: '40sp'
-                    text: 'X'
-                    on_release: app.r(gbtn_3)
-                Button:
-                    id: gbtn_4
-                    font_size: '40sp' 
-                    text: 'O'
-                    on_release: app.r(gbtn_4)
-                Button:
-                    id: gbtn_5
-                    font_size: '40sp'
-                    text: 'X'
-                    on_release: app.r(gbtn_5)
-                Button:
-                    id: gbtn_6
-                    font_size: '40sp'
-                    text: 'O'
-                    on_release: app.r(gbtn_6)
-                Button:
-                    id: gbtn_7
-                    font_size: '40sp'
-                    text: 'X'
-                    on_release: app.r(gbtn_7)
-                Button:
-                    id: gbtn_8
-                    font_size: '40sp'
-                    text: 'O'
-                    on_release: app.r(gbtn_8)
-                Button:
-                    id: gbtn_9
-                    font_size: '40sp'
-                    text: 'X'
-                    on_release: app.r(gbtn_9)
-
-                # Alternative
-                #Image:
-                #    id: obj_1
-                #    source: './img/boll.png'
-                #Image:
-                #    id: obj_2
-                #    source: './img/tic.png'
-        
-
 
 
 
