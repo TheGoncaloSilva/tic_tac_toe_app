@@ -39,7 +39,8 @@ WindowManager:
                 id: mplayer
                 text: '1 v 1'
                 background_color: 0,0,128, 0.8
-                on_release: 
+                on_release:
+                    app.load_multiplayer(mplayer)
                     app.root.current = "game" # go to other window
                     root.manager.transition.direction = "up" # change the page transition effect
             Button:
@@ -71,6 +72,7 @@ WindowManager:
                 pos_hint: {"x":0.1, "top":0.9}
                 background_color: 255,215,0, 0.5
                 on_release: 
+                    app.load_solo_mode('easy')
                     app.root.current = "game" # go to other window
                     root.manager.transition.direction = "up" # change the page transition effect
             Button:
@@ -80,6 +82,7 @@ WindowManager:
                 pos_hint: {"x":0.1, "top":0.6}
                 background_color: 255,0,0, 0.5
                 on_release: 
+                    app.load_solo_mode('difficult')
                     app.root.current = "game" # go to other window
                     root.manager.transition.direction = "up" # change the page transition effect
 
@@ -136,48 +139,48 @@ WindowManager:
                 Button:
                     id: gbtn_1
                     font_size: '40sp'       
-                    text: 'X'
-                    on_release: app.r(gbtn_1)
+                    text: ''
+                    on_release: app.choose_pos(gbtn_1)
                 Button:
                     id: gbtn_2
                     font_size: '40sp'
-                    text: 'O'
-                    on_release: app.r(gbtn_2)
+                    text: ''
+                    on_release: app.choose_pos(gbtn_2)
                 Button:
                     id: gbtn_3
                     font_size: '40sp'
-                    text: 'X'
-                    on_release: app.r(gbtn_3)
+                    text: ''
+                    on_release: app.choose_pos(gbtn_3)
                 Button:
                     id: gbtn_4
                     font_size: '40sp' 
-                    text: 'O'
-                    on_release: app.r(gbtn_4)
+                    text: ''
+                    on_release: app.choose_pos(gbtn_4)
                 Button:
                     id: gbtn_5
                     font_size: '40sp'
-                    text: 'X'
-                    on_release: app.r(gbtn_5)
+                    text: ''
+                    on_release: app.choose_pos(gbtn_5)
                 Button:
                     id: gbtn_6
                     font_size: '40sp'
-                    text: 'O'
-                    on_release: app.r(gbtn_6)
+                    text: ''
+                    on_release: app.choose_pos(gbtn_6)
                 Button:
                     id: gbtn_7
                     font_size: '40sp'
-                    text: 'X'
-                    on_release: app.r(gbtn_7)
+                    text: ''
+                    on_release: app.choose_pos(gbtn_7)
                 Button:
                     id: gbtn_8
                     font_size: '40sp'
-                    text: 'O'
-                    on_release: app.r(gbtn_8)
+                    text: ''
+                    on_release: app.choose_pos(gbtn_8)
                 Button:
                     id: gbtn_9
                     font_size: '40sp'
-                    text: 'X'
-                    on_release: app.r(gbtn_9)
+                    text: ''
+                    on_release: app.choose_pos(gbtn_9)
 
                 # Alternative
                 #Image:
