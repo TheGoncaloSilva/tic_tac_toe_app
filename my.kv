@@ -114,13 +114,21 @@ WindowManager:
         FloatLayout:
 
             Button:
-                text: "Back"
+                background_normal: "./img/back.png"
                 size_hint: None, None
-                size: 75, 50
-                pos_hint: {"x":0.01, "top":0.99}
+                size: 40, 40
+                pos_hint: {"x":0.01, "top":0.98}
                 on_release: 
                     app.root.current = "main" # go to other window
                     root.manager.transition.direction = "down" # change the page transition effect
+
+            Button:
+                background_normal: "./img/restore.png"
+                size_hint: None, None
+                size: 40, 40
+                pos_hint: {"x":0.1, "top":0.98}
+                on_release: 
+                    app.read_table()
             
         GridLayout:
             cols: 1
