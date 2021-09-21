@@ -97,6 +97,7 @@ WindowManager:
                     root.manager.transition.direction = "right" # change the page transition effect
 <GameWindow>:
     name: "game"
+    mode : mode
 
     FloatLayout:
         size_hint: None, None
@@ -128,15 +129,44 @@ WindowManager:
                 size: 40, 40
                 pos_hint: {"x":0.1, "top":0.98}
                 on_release: 
-                    app.read_table()
+                    app.restart(gbtn_1, gbtn_2, gbtn_3, gbtn_4, gbtn_5, gbtn_6, gbtn_7, gbtn_8, gbtn_9)
+            
+            Label:
+                id: lbl_current
+                text: "Playing: "
+                size_hint: None, None
+                size: 40, 40
+                bold: True
+                font_size: '15sp'
+                pos_hint: {"x":0.3, "top":0.98}
+
+            Label:
+                id: lbl_gamer
+                text: "Player 1 "
+                size_hint: None, None
+                size: 40, 40
+                font_size: '20sp'
+                pos_hint: {"x":0.39, "top":0.98}
+            
+            Button:
+                id: gbtn_1
+                size_hint: None, None
+                size: 40, 40
+                pos_hint: {"x":0.47, "top":0.98}
+                #font_size: '40sp'       
+                text: 'X'
+                disabled: True
+
             
         GridLayout:
+            id: box_out
             cols: 1
             size_hint: None, None
             size: root.width - 20, root.height - 130 # 65 each part at the top
             pos: 10, 65
 
             GridLayout:
+                id: box_in
                 cols: 3
                 rows: 3
                 size_hint: None, None
@@ -148,47 +178,47 @@ WindowManager:
                     id: gbtn_1
                     font_size: '40sp'       
                     text: ''
-                    on_release: app.choose_pos(gbtn_1)
+                    on_release: app.choose_pos(self, 0)
                 Button:
                     id: gbtn_2
                     font_size: '40sp'
                     text: ''
-                    on_release: app.choose_pos(gbtn_2)
+                    on_release: app.choose_pos(self, 1)
                 Button:
                     id: gbtn_3
                     font_size: '40sp'
                     text: ''
-                    on_release: app.choose_pos(gbtn_3)
+                    on_release: app.choose_pos(self, 2)
                 Button:
                     id: gbtn_4
                     font_size: '40sp' 
                     text: ''
-                    on_release: app.choose_pos(gbtn_4)
+                    on_release: app.choose_pos(self, 3)
                 Button:
                     id: gbtn_5
                     font_size: '40sp'
                     text: ''
-                    on_release: app.choose_pos(gbtn_5)
+                    on_release: app.choose_pos(self, 4)
                 Button:
                     id: gbtn_6
                     font_size: '40sp'
                     text: ''
-                    on_release: app.choose_pos(gbtn_6)
+                    on_release: app.choose_pos(self, 5)
                 Button:
                     id: gbtn_7
                     font_size: '40sp'
                     text: ''
-                    on_release: app.choose_pos(gbtn_7)
+                    on_release: app.choose_pos(self, 6)
                 Button:
                     id: gbtn_8
                     font_size: '40sp'
                     text: ''
-                    on_release: app.choose_pos(gbtn_8)
+                    on_release: app.choose_pos(self, 7)
                 Button:
                     id: gbtn_9
                     font_size: '40sp'
                     text: ''
-                    on_release: app.choose_pos(gbtn_9)
+                    on_release: app.choose_pos(self, 8)
 
                 # Alternative
                 #Image:
@@ -197,6 +227,15 @@ WindowManager:
                 #Image:
                 #    id: obj_2
                 #    source: './img/tic.png'
+
+        FloatLayout:
+            Label:
+                id: mode
+                text: "Mode: "
+                size_hint: None, None
+                size: 40, 40
+                font_size: '15sp'
+                pos_hint: {"x":0.01, "top":0}
         
 
 
