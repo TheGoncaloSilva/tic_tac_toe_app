@@ -1,12 +1,200 @@
+from typing import Text
+import random
 import kivy
 from kivy.app import App
+from kivy.lang import Builder
+from kivy.core.window import Window
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.gridlayout import GridLayout # Import GridLayout design
+from kivy.uix.button import Button # import buttons
 from kivy.uix.label import Label # Import the simbols and widgets
-import os
-#os.environ["SDL_VIDEODRIVER"] = "x11"
+from kivy.uix.popup import Popup # Import Popups
+from kivy.uix.boxlayout import BoxLayout # Box layout for Popup
+from kivy.properties import ObjectProperty
+
+class MainWindow(Screen): # Window for choosing the type of game
+    pass
+
+class OptionsWindow(Screen): # window for showing the computer dificulty levels
+    pass            
+
+class GameWindow(Screen): # game window (where the game occurs)
+    pass    
+
+class WindowManager(ScreenManager): # Transition between the windows
+    pass
+
+kv = Builder.load_file("my.kv") # Now the name of the kv file does not need to mathc the class name - App
+sm = WindowManager()
+
+screens = [MainWindow(name="main"), OptionsWindow(name="options"),GameWindow(name="game")]
+for screen in screens:
+    sm.add_widget(screen)
+
+sm.current = "main"
 
 class MyApp(App):
-    def build(self): # Construir o UI
-        return Label(text = "Hello World")
+
+    #mode = ObjectProperty(None)
+
+    game_mode = [] # mode wich the game is supposed to be played
+    table = []
+    max_plays = 9 # number of maximum plays possible with the grid size
+    player1 = "X" # Player 1 always exists
+    player2 = "O" # Player 2 is a bot in single player mode and another player in multiplayer
+    active_player = 0 # Currently active player
+    winner = '' # wich player won the game (if null no one won)
+    game_ended = False
+# ****************************************
+
+    def build(self):
+        self.title = 'Tic Tac Toe'
+        return sm
+    
+    def load_table(self):
+        self.table = [[0, 0, 0], [0, 0, 0], [0, 0 , 0]] # no position is selected
+        return self.table
+
+    def load_multiplayer(self, asset): # update the game_mode to multiplayer
+        self.game_mode = ['multiplayer', '']
+        #self.mode.text = "Mode: multiplayer"
+
+        if self.active_player != 0:
+            self.game_ended = True
+            self.popup_manager(False, 'The game has ended! ', 'You exited the game, please restart to play again')
+        else:
+            self.clear_table()
+            # call the popup to choose the avatar (the active player has already been randomized, so just need to choose)
+    
+    def load_solo_mode(self, difficulty): # update the game mode to single player and also it's difficulty
+        self.game_mode = ['solo', difficulty]
+        if self.active_player != 0:
+            self.game_ended = True
+            self.popup_manager(False, 'The game has ended! ', 'You exited the game, please restart to play again')
+        else:
+            self.clear_table()
+            # call the popup to choose the avatar
+    
+    def active_player_symbol(self):
+        return self.player1 if self.active_player == 1 else self.player2 
+
+    def mark_pos(self, pos):
+        if pos >= 0 and pos <= 8:
+            if pos >= 0 and pos <= 2: # 1st row
+                self.table[0][pos] = self.active_player_symbol()
+            elif pos >= 3 and pos <= 5: # 2nd row
+                pos -= 3
+                self.table[1][pos] = self.active_player_symbol()
+            else: # 3rd row
+                pos -= 6
+                self.table[2][pos] = self.active_player_symbol()
+        else:
+            self.popup_manager(False, 'OOPS! :(', 'An Error occurred trying to save your position. Please restart the game or try again later')
+
+    def choose_pos(self, asset, n): # when a player pressed a button
+        if not self.game_ended:
+            if asset.text == "":
+                if self.player1 != "" and self.player2 != "":
+                    self.mark_pos(n) # update table reference
+                    if self.active_player % 2 == 0:
+                        asset.text = self.player2
+                        self.analyze_moves() # a move has been done, figure out if someone has won
+                        self.active_player = 1
+                    else: 
+                        asset.text = self.player1
+                        self.analyze_moves() # a move has been done, figure out if someone has won
+                        self.active_player = 2   
+
+                else: # If the conditions aren't met, it will give a warning to the user
+                    self.popup_manager(False, 'OOPS! :(', 'An Error occurred trying to register your position. Please restart the game or try again later')
+        else:
+            self.popup_manager(False, 'The game has ended! ', 'The game has already ended, please restart to play again')
+    def choose_player(self): # Choose the player to start the game
+        self.active_player = random.randrange(0, 2)
+
+    # reset the buttons (not the most optimized way)
+    def restart(self, *btn): # *btn allows to receive as much arguments as they come
+        for btns in btn:
+            btns.text = ""
+        self.clear_table()
+
+    def clear_table(self): # Reset the game
+        self.table = self.load_table()
+        self.choose_player()
+        self.game_ended = False
+        self.winner = ''
+
+    def analyze_moves(self):
+        winners = self.analyze_winner()
+        if winners[0]: # discover if a winner exists
+            self.winner = winners[1]
+            winner_name = 'Player 1' if self.winner == 1 else 'Player2'
+            loser_name = 'Player 1' if self.winner == 2 else 'Player 2'
+            self.game_ended = True
+            self.popup_manager(True, 'Congratulations ' + winner_name + ' ! ',
+                             'Well done ' + winner_name + '! You have managed to snag a win out of ' +
+                               loser_name + ' using the mighty ' + self.active_player_symbol())
+        else:
+            if self.count_plays() == self.max_plays:
+                self.game_ended = True
+                self.popup_manager(True, 'We have managed to get a draw! ', 
+                'Neither one of the players has achieved to win, both can do better next time!')
+
+
+    # Function for dicovering the winner
+    def analyze_winner(self):
+        strategies = [[0, 1, 2], [3, 4, 5], [6, 7, 8],
+                      [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                      [0, 4, 8], [2, 4, 6]]
+        
+        for case in strategies:
+            match = 0
+            for pos in case:
+                if pos >= 0 and pos <= 2: # 1st row
+                    if self.table[0][pos] == self.active_player_symbol():
+                        match += 1
+                elif pos >= 3 and pos <= 5: # 2nd row
+                    pos -= 3
+                    if self.table[1][pos] == self.active_player_symbol():
+                        match += 1
+                else: # 3rd row
+                    pos -= 6
+                    if self.table[2][pos] == self.active_player_symbol():
+                        match += 1
+            
+            if match == 3:
+                return[True, self.active_player]
+
+        return [False, 1]
+
+    # Sum the moves made by the two players
+    def count_plays(self):
+        result = 0
+
+        for row in range(len(self.table)):
+            for column in range(len(self.table)):
+                if self.table[row][column] != 0:
+                    result += 1
+
+        return result
+
+    # Flexible way of showing Popups, parameters:
+    #   - self...
+    #   - status of the message -> True or False and act accordingly
+    #   - Title given to the Popup
+    #   - The Message itself
+    def popup_manager(self, status, title, message):
+        boxl = BoxLayout(orientation="vertical")
+        boxl2 =BoxLayout(orientation="horizontal", size_hint_y=None, height=40)
+        pop = Popup(title=title, content=boxl, size_hint=(0.5,0.7))
+        document = Label(text=message,markup=True, valign='top')
+        button = Button(text='Dismiss', size_hint_y=None, height=40)
+        button.bind(on_press=(lambda x:pop.dismiss()))
+        boxl.add_widget(document)
+        boxl2.add_widget(button)
+        boxl.add_widget(boxl2)
+        document.bind(size=document.setter('text_size'))
+        pop.open() # Open the Popup
 
 if __name__ == "__main__":
     MyApp().run()
