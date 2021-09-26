@@ -92,7 +92,7 @@ class MyApp(App):
         else:
             self.popup_manager(False, 'OOPS! :(', 'An Error occurred trying to save your position. Please restart the game or try again later')
 
-    def choose_pos(self, asset, n, lbl_gamer, btn_gamer): # when a player pressed a button
+    def choose_pos(self, asset, n, lbl_gamer, btn_gamer, *btns): # when a player pressed a button
         if not self.game_ended:
             if asset.text == "":
                 if self.player1 != "" and self.player2 != "":
@@ -105,6 +105,15 @@ class MyApp(App):
                         asset.text = self.player1
                         self.analyze_moves() # a move has been done, figure out if someone has won
                         self.active_player = 2
+                    
+                    if self.game_mode[0] == 'solo' and self.active_player == 2 and not self.game_ended:
+                        if self.game_mode[1] == 'easy':
+                            self.easy_mode(*btns)
+                        else:
+                            self.difficult_mode(*btns)
+
+                        self.analyze_moves() # a move has been done, figure out if someone has won
+                        self.active_player = 1
                     
                     btn_gamer.text = self.active_player_symbol()
                     lbl_gamer.text = "Player 1" if self.active_player == 1 else "Player 2"
@@ -126,9 +135,41 @@ class MyApp(App):
 
     def clear_table(self): # Reset the game
         self.table = self.load_table()
-        self.choose_player()
+        if self.game_mode[0] == 'solo':
+           self.active_player = 1
+        else: 
+            self.choose_player()
         self.game_ended = False
         self.winner = ''
+
+    def easy_mode(self, *btns):
+        pos = random.randrange(0,9) # 0 to 8
+        found = False
+        btn_pos = pos
+
+        if pos >= 0 and pos <= 2: # 1st row
+            if self.table[0][pos] == 0:
+                self.table[0][pos] = self.active_player_symbol()
+                btns[btn_pos].text = self.active_player_symbol()
+                found = True
+        elif pos >= 3 and pos <= 5: # 2nd row
+            pos -= 3
+            if self.table[1][pos] == 0:
+                self.table[1][pos] = self.active_player_symbol()
+                btns[btn_pos].text = self.active_player_symbol()
+                found = True
+        elif pos >= 6 and pos <= 8: # 3rd row
+            pos -= 6
+            if self.table[2][pos] == 0:
+                self.table[2][pos] = self.active_player_symbol()
+                btns[btn_pos].text = self.active_player_symbol()
+                found = True
+
+        if not found:
+            self.easy_mode(*btns)
+
+    def difficult_mode(self, *btns):
+        pass
 
     def analyze_moves(self):
         winners = self.analyze_winner()
