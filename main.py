@@ -11,6 +11,9 @@ from kivy.uix.label import Label # Import the simbols and widgets
 from kivy.uix.popup import Popup # Import Popups
 from kivy.uix.boxlayout import BoxLayout # Box layout for Popup
 from kivy.properties import ObjectProperty
+from kivy.properties import StringProperty
+from kivy.lang.parser import global_idmap
+
 
 class MainWindow(Screen): # Window for choosing the type of game
     pass
@@ -35,8 +38,6 @@ sm.current = "main"
 
 class MyApp(App):
 
-    #mode = ObjectProperty(None)
-
     game_mode = [] # mode wich the game is supposed to be played
     table = []
     max_plays = 9 # number of maximum plays possible with the grid size
@@ -55,9 +56,8 @@ class MyApp(App):
         self.table = [[0, 0, 0], [0, 0, 0], [0, 0 , 0]] # no position is selected
         return self.table
 
-    def load_multiplayer(self, asset): # update the game_mode to multiplayer
+    def load_multiplayer(self, mode): # update the game_mode to multiplayer
         self.game_mode = ['multiplayer', '']
-        #self.mode.text = "Mode: multiplayer"
 
         if self.active_player != 0:
             self.game_ended = True
@@ -68,6 +68,7 @@ class MyApp(App):
     
     def load_solo_mode(self, difficulty): # update the game mode to single player and also it's difficulty
         self.game_mode = ['solo', difficulty]
+
         if self.active_player != 0:
             self.game_ended = True
             self.popup_manager(False, 'The game has ended! ', 'You exited the game, please restart to play again')
@@ -91,7 +92,7 @@ class MyApp(App):
         else:
             self.popup_manager(False, 'OOPS! :(', 'An Error occurred trying to save your position. Please restart the game or try again later')
 
-    def choose_pos(self, asset, n): # when a player pressed a button
+    def choose_pos(self, asset, n, lbl_gamer, btn_gamer): # when a player pressed a button
         if not self.game_ended:
             if asset.text == "":
                 if self.player1 != "" and self.player2 != "":
@@ -103,7 +104,10 @@ class MyApp(App):
                     else: 
                         asset.text = self.player1
                         self.analyze_moves() # a move has been done, figure out if someone has won
-                        self.active_player = 2   
+                        self.active_player = 2
+                    
+                    btn_gamer.text = self.active_player_symbol()
+                    lbl_gamer.text = "Player 1" if self.active_player == 1 else "Player 2"
 
                 else: # If the conditions aren't met, it will give a warning to the user
                     self.popup_manager(False, 'OOPS! :(', 'An Error occurred trying to register your position. Please restart the game or try again later')
@@ -113,10 +117,12 @@ class MyApp(App):
         self.active_player = random.randrange(0, 2)
 
     # reset the buttons (not the most optimized way)
-    def restart(self, *btn): # *btn allows to receive as much arguments as they come
+    def restart(self,lbl_gamer, btn_gamer,  *btn): # *btn allows to receive as much arguments as they come
         for btns in btn:
             btns.text = ""
         self.clear_table()
+        btn_gamer.text = self.active_player_symbol()
+        lbl_gamer.text = "Player 1" if self.active_player == 1 else "Player 2"
 
     def clear_table(self): # Reset the game
         self.table = self.load_table()

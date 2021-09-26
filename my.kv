@@ -97,7 +97,11 @@ WindowManager:
                     root.manager.transition.direction = "right" # change the page transition effect
 <GameWindow>:
     name: "game"
-    mode : mode
+    mde : mde
+    lbl_current: lbl_current
+    lbl_gamer: lbl_gamer
+    btn_gamer: btn_gamer
+
 
     FloatLayout:
         size_hint: None, None
@@ -129,7 +133,7 @@ WindowManager:
                 size: 40, 40
                 pos_hint: {"x":0.1, "top":0.98}
                 on_release: 
-                    app.restart(gbtn_1, gbtn_2, gbtn_3, gbtn_4, gbtn_5, gbtn_6, gbtn_7, gbtn_8, gbtn_9)
+                    app.restart(lbl_gamer, btn_gamer, gbtn_1, gbtn_2, gbtn_3, gbtn_4, gbtn_5, gbtn_6, gbtn_7, gbtn_8, gbtn_9)
             
             Label:
                 id: lbl_current
@@ -149,13 +153,21 @@ WindowManager:
                 pos_hint: {"x":0.39, "top":0.98}
             
             Button:
-                id: gbtn_1
+                id: btn_gamer
                 size_hint: None, None
                 size: 40, 40
                 pos_hint: {"x":0.47, "top":0.98}
                 #font_size: '40sp'       
                 text: 'X'
                 disabled: True
+
+            Label:
+                id: mde
+                text: ""
+                size_hint: None, None
+                size: 40, 40
+                font_size: '15sp'
+                pos_hint: {"x":0.80, "top":0.98}
 
             
         GridLayout:
@@ -178,47 +190,47 @@ WindowManager:
                     id: gbtn_1
                     font_size: '40sp'       
                     text: ''
-                    on_release: app.choose_pos(self, 0)
+                    on_release: app.choose_pos(self, 0, lbl_gamer, btn_gamer)
                 Button:
                     id: gbtn_2
                     font_size: '40sp'
                     text: ''
-                    on_release: app.choose_pos(self, 1)
+                    on_release: app.choose_pos(self, 1, lbl_gamer, btn_gamer)
                 Button:
                     id: gbtn_3
                     font_size: '40sp'
                     text: ''
-                    on_release: app.choose_pos(self, 2)
+                    on_release: app.choose_pos(self, 2, lbl_gamer, btn_gamer)
                 Button:
                     id: gbtn_4
                     font_size: '40sp' 
                     text: ''
-                    on_release: app.choose_pos(self, 3)
+                    on_release: app.choose_pos(self, 3, lbl_gamer, btn_gamer)
                 Button:
                     id: gbtn_5
                     font_size: '40sp'
                     text: ''
-                    on_release: app.choose_pos(self, 4)
+                    on_release: app.choose_pos(self, 4, lbl_gamer, btn_gamer)
                 Button:
                     id: gbtn_6
                     font_size: '40sp'
                     text: ''
-                    on_release: app.choose_pos(self, 5)
+                    on_release: app.choose_pos(self, 5, lbl_gamer, btn_gamer)
                 Button:
                     id: gbtn_7
                     font_size: '40sp'
                     text: ''
-                    on_release: app.choose_pos(self, 6)
+                    on_release: app.choose_pos(self, 6, lbl_gamer, btn_gamer)
                 Button:
                     id: gbtn_8
                     font_size: '40sp'
                     text: ''
-                    on_release: app.choose_pos(self, 7)
+                    on_release: app.choose_pos(self, 7, lbl_gamer, btn_gamer)
                 Button:
                     id: gbtn_9
                     font_size: '40sp'
                     text: ''
-                    on_release: app.choose_pos(self, 8)
+                    on_release: app.choose_pos(self, 8, lbl_gamer, btn_gamer)
 
                 # Alternative
                 #Image:
@@ -227,15 +239,6 @@ WindowManager:
                 #Image:
                 #    id: obj_2
                 #    source: './img/tic.png'
-
-        FloatLayout:
-            Label:
-                id: mode
-                text: "Mode: "
-                size_hint: None, None
-                size: 40, 40
-                font_size: '15sp'
-                pos_hint: {"x":0.01, "top":0}
         
 
 
