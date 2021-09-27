@@ -146,7 +146,7 @@ class MyApp(App):
         pos = random.randrange(0,9) # 0 to 8
         found = False
         btn_pos = pos
-
+        
         if pos >= 0 and pos <= 2: # 1st row
             if self.table[0][pos] == 0:
                 self.table[0][pos] = self.active_player_symbol()
@@ -169,7 +169,66 @@ class MyApp(App):
             self.easy_mode(*btns)
 
     def difficult_mode(self, *btns):
-        pass
+        strategies = [[0, 1, 2], [3, 4, 5], [6, 7, 8],
+                      [0, 3, 6], [1, 4, 7], [2, 5, 8],
+                      [0, 4, 8], [2, 4, 6]]
+
+        best_pos = -1
+        biggest_match = 0
+        match = 0
+        temp_pos = None
+        i = 0
+
+        for case in strategies:
+            if match > biggest_match :
+                biggest_match = match
+            match = 0
+            for pos in case:
+                i += 1
+                if pos >= 0 and pos <= 2: # 1st row
+                    if self.table[0][pos] == 'O':
+                        match += 1
+                    elif self.table[0][pos] == 0:
+                        temp_pos = pos
+                elif pos >= 3 and pos <= 5: # 2nd row
+                    pos -= 3
+                    if self.table[1][pos] == 'O':
+                        match += 1
+                    elif self.table[1][pos] == 0:
+                        temp_pos = pos
+                else: # 3rd row
+                    pos -= 6
+                    if self.table[2][pos] == 'O':
+                        match += 1
+                    elif self.table[2][pos] == 0:
+                        temp_pos = pos
+            
+            if (match >= 2 or best_pos == -1) and temp_pos != None:
+                best_pos = temp_pos
+                print("---/--- " + str(i))
+                print(best_pos)
+                print(match)
+        
+        if biggest_match <= 1:
+            return self.easy_mode(*btns)
+
+        pos = best_pos
+        if pos >= 0 and pos <= 2: # 1st row
+            if self.table[0][pos] == 0:
+                self.table[0][pos] = self.active_player_symbol()
+                btns[best_pos].text = self.active_player_symbol()
+        elif pos >= 3 and pos <= 5: # 2nd row
+            pos -= 3
+            if self.table[1][pos] == 0:
+                self.table[1][pos] = self.active_player_symbol()
+                btns[best_pos].text = self.active_player_symbol()
+        elif pos >= 6 and pos <= 8: # 3rd row
+            pos -= 6
+            if self.table[2][pos] == 0:
+                self.table[2][pos] = self.active_player_symbol()
+                btns[best_pos].text = self.active_player_symbol()
+
+                
 
     def analyze_moves(self):
         winners = self.analyze_winner()
