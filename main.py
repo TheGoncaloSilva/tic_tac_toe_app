@@ -110,7 +110,7 @@ class MyApp(App):
                         if self.game_mode[1] == 'easy':
                             self.easy_mode(*btns)
                         else:
-                            self.difficult_mode(*btns)
+                            self.ai_mode(*btns)
 
                         self.analyze_moves() # a move has been done, figure out if someone has won
                         self.active_player = 1
@@ -167,6 +167,105 @@ class MyApp(App):
 
         if not found:
             self.easy_mode(*btns)
+
+    def ai_mode(self, *btns):
+        bestScore = float('-inf') # negative infinity
+        move = []
+
+        for l in range(3):
+            for c in range(3):
+                # Is the spot available?
+                if (self.table[l][c] == 0):
+                    self.table[l][c] = self.player2
+                    score = self.minimax(0, False)
+                    #score = 1
+                    self.table[l][c] = 0
+                    if score > bestScore :
+                        bestScore = score
+                        move = [l, c]
+
+        self.table[move[0]][move[1]] = self.player2
+        if move[0] == 0:
+            btns[move[1]].text = self.player2
+        elif move[0] == 1:
+            btns[move[1] + 3].text = self.player2
+        else :            
+            btns[move[1] + 6].text = self.player2
+
+        print(self.table)
+
+    #         X, O , tie
+    scores = { 'X': 1, 'O': -1, 'tie': 0}
+
+    def minimax(self, depth, isMaximizing):
+        result = self.ai_winner()
+
+        if result != None:
+            return self.scores[result]
+
+        if isMaximizing :
+            bestScore = float('-inf') # negative infinity
+            for l in range(3):
+                for c in range(3):
+                    # Is the spot available?
+                    if self.table[l][c] == 0 :
+                        self.table[l][c] = self.player2 # AI
+                        score = self.minimax(depth + 1, False) # call minimax recusively
+                        self.table[l][c] = 0
+                        bestScore = max(score, bestScore) # find the best spot
+
+            return bestScore # return the best spot
+        else :
+            bestScore = float('inf') # negative infinity
+            for l in range(3):
+                for c in range(3):
+                    # Is the spot available?
+                    if self.table[l][c] == 0 :
+                        self.table[l][c] = self.player1
+                        score = self.minimax(depth + 1, True) # call minimax recusively
+                        self.table[l][c] = 0
+                        bestScore = min(score, bestScore) # find the best spot
+                
+            return bestScore # return the best spot
+
+    def ai_winner(self):
+        winner = None
+
+        # horizontal
+        for l in range(3):
+            if (self.table[l][0] == self.table[l][1] == self.table[l][2]) and self.table[l][0] != 0:
+                winner = self.table[l][0]
+            
+        
+
+        # Vertical
+        for c in range(3):
+            if (self.table[0][c] == self.table[1][c] == self.table[2][c]) and self.table[0][c] != 0:
+                winner = self.table[0][c]
+            
+        
+
+        # Diagonal
+        if (self.table[0][0] == self.table[1][1] == self.table[2][2]) and self.table[0][0] != 0:
+            winner = self.table[0][0]
+        
+        if (self.table[2][0] == self.table[1][1] == self.table[0][2]) and self.table[2][0] != 0:
+            winner = self.table[2][0]
+        
+
+        openSpots = 0
+        for l in range(3):
+                for c in range(3):
+                    if (self.table[l][c] == 0) :
+                        openSpots += 1
+                    
+            
+        if (winner == None and openSpots == 0):
+            return 'tie'
+        else:
+            return winner
+        
+        
 
     def difficult_mode(self, *btns):
         strategies = [[0, 1, 2], [3, 4, 5], [6, 7, 8],
@@ -231,7 +330,7 @@ class MyApp(App):
                 
 
     def analyze_moves(self):
-        winners = self.analyze_winner()
+        winners = self.analyze_winner(self.table)
         if winners[0]: # discover if a winner exists
             self.winner = winners[1]
             winner_name = 'Player 1' if self.winner == 1 else 'Player2'
@@ -248,7 +347,7 @@ class MyApp(App):
 
 
     # Function for dicovering the winner
-    def analyze_winner(self):
+    def analyze_winner(self, board):
         strategies = [[0, 1, 2], [3, 4, 5], [6, 7, 8],
                       [0, 3, 6], [1, 4, 7], [2, 5, 8],
                       [0, 4, 8], [2, 4, 6]]
@@ -257,15 +356,15 @@ class MyApp(App):
             match = 0
             for pos in case:
                 if pos >= 0 and pos <= 2: # 1st row
-                    if self.table[0][pos] == self.active_player_symbol():
+                    if board[0][pos] == self.active_player_symbol():
                         match += 1
                 elif pos >= 3 and pos <= 5: # 2nd row
                     pos -= 3
-                    if self.table[1][pos] == self.active_player_symbol():
+                    if board[1][pos] == self.active_player_symbol():
                         match += 1
                 else: # 3rd row
                     pos -= 6
-                    if self.table[2][pos] == self.active_player_symbol():
+                    if board[2][pos] == self.active_player_symbol():
                         match += 1
             
             if match == 3:

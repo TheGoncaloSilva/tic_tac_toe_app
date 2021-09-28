@@ -60,3 +60,4 @@ Bibliography:
   Photos: -> https://www.google.com/search?q=back+png&sxsrf=AOaemvJZK8mnhPcu6Bt04gZQNrrQWRVpJw:1631921377924&tbm=isch&source=iu&ictx=1&fir=eJkybAQNdWU6nM%252CqVyJb3dujoPY3M%252C_&vet=1&usg=AI4_-kQZZybjVgCeR_2CTC0exEfb-lxx-w&sa=X&ved=2ahUKEwjD4qDwlIfzAhUGnhQKHR8GCq0Q9QF6BAgkEAE&biw=1729&bih=1286&dpr=0.99#imgrc=0uLfDwsYfbJ6RM
           -> https://www.pngarts.com/explore/31353
   Similiar Project: -> https://github.com/Ahmed0tdc/X-O-game
+  AI difficult player -> https://github.com/CodingTrain/website/blob/main/CodingChallenges/CC_154_Tic_Tac_Toe_Minimax/P5/minimax.js
