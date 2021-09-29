@@ -48,14 +48,17 @@ class MyApp(App):
     game_ended = False
 # ****************************************
 
+
     def build(self):
-        self.title = 'Tic Tac Toe'
+        self.title = 'Tic Tac Toe' # Change the the name of the application window
         return sm
     
+    # Reset the table values to 0
     def load_table(self):
         self.table = [[0, 0, 0], [0, 0, 0], [0, 0 , 0]] # no position is selected
         return self.table
 
+    # player choose the multiplayer (1v1) mode, so load the game with this mode
     def load_multiplayer(self, mode): # update the game_mode to multiplayer
         self.game_mode = ['multiplayer', '']
 
@@ -69,18 +72,19 @@ class MyApp(App):
     def load_solo_mode(self, difficulty): # update the game mode to single player and also it's difficulty
         self.game_mode = ['solo', difficulty]
 
-        if self.active_player != 0:
-            self.game_ended = True
+        if self.active_player != 0: # if there is no active player
+            self.game_ended = True # the game has ended
             self.popup_manager(False, 'The game has ended! ', 'You exited the game, please restart to play again')
         else:
-            self.clear_table()
-            # call the popup to choose the avatar
+            self.clear_table() # load the game
     
+    # return the symbol or avatar of the current player
     def active_player_symbol(self):
         return self.player1 if self.active_player == 1 else self.player2 
 
+    # save the players choosen position on the backend table
     def mark_pos(self, pos):
-        if pos >= 0 and pos <= 8:
+        if pos >= 0 and pos <= 8: # validate the choosen position
             if pos >= 0 and pos <= 2: # 1st row
                 self.table[0][pos] = self.active_player_symbol()
             elif pos >= 3 and pos <= 5: # 2nd row
@@ -92,8 +96,11 @@ class MyApp(App):
         else:
             self.popup_manager(False, 'OOPS! :(', 'An Error occurred trying to save your position. Please restart the game or try again later')
 
-    def choose_pos(self, asset, n, lbl_gamer, btn_gamer, *btns): # when a player pressed a button
-        if not self.game_ended:
+    # function called when a button is pressed
+    # receives the labels to update with the player name and avatar
+    # receives all the buttons to then provide them to the AI player if choosen (could be optimized)
+    def choose_pos(self, asset, n, lbl_gamer, btn_gamer, *btns): # *btn allows to receive as much arguments as they come
+        if not self.game_ended: # if the game did'nt end
             if asset.text == "":
                 if self.player1 != "" and self.player2 != "":
                     self.mark_pos(n) # update table reference
@@ -106,6 +113,7 @@ class MyApp(App):
                         self.analyze_moves() # a move has been done, figure out if someone has won
                         self.active_player = 2
                     
+                    # if the player is playing against the AI, choose according to it's difficulty
                     if self.game_mode[0] == 'solo' and self.active_player == 2 and not self.game_ended:
                         if self.game_mode[1] == 'easy':
                             self.easy_mode(*btns)
@@ -115,6 +123,7 @@ class MyApp(App):
                         self.analyze_moves() # a move has been done, figure out if someone has won
                         self.active_player = 1
                     
+                    # update the labels that show the player name and avatar
                     btn_gamer.text = self.active_player_symbol()
                     lbl_gamer.text = "Player 1" if self.active_player == 1 else "Player 2"
 
@@ -122,14 +131,19 @@ class MyApp(App):
                     self.popup_manager(False, 'OOPS! :(', 'An Error occurred trying to register your position. Please restart the game or try again later')
         else:
             self.popup_manager(False, 'The game has ended! ', 'The game has already ended, please restart to play again')
-    def choose_player(self): # Choose the player to start the game
+    
+    # Randomly choose the player to start the game
+    def choose_player(self): 
         self.active_player = random.randrange(0, 2)
 
     # reset the buttons (not the most optimized way)
     def restart(self,lbl_gamer, btn_gamer,  *btn): # *btn allows to receive as much arguments as they come
-        for btns in btn:
+        for btns in btn: # cycle through all the buttons
             btns.text = ""
-        self.clear_table()
+
+        self.clear_table() # load the game (reset the variables)
+
+        # reset the labels that show the player name and avatar
         btn_gamer.text = self.active_player_symbol()
         lbl_gamer.text = "Player 1" if self.active_player == 1 else "Player 2"
 
@@ -142,6 +156,9 @@ class MyApp(App):
         self.game_ended = False
         self.winner = ''
 
+    # AI easy mode
+    # Chooses random values and checks if the spots are not taken,
+    # if they are, it will recursively try to find a free spot
     def easy_mode(self, *btns):
         pos = random.randrange(0,9) # 0 to 8
         found = False
@@ -166,8 +183,9 @@ class MyApp(App):
                 found = True
 
         if not found:
-            self.easy_mode(*btns)
+            self.easy_mode(*btns) # recursive call
 
+    # AI difficult mode
     def ai_mode(self, *btns):
         bestScore = float('-inf') # negative infinity
         move = []
@@ -197,6 +215,7 @@ class MyApp(App):
     #         X, O , tie
     scores = { 'X': 1, 'O': -1, 'tie': 0}
 
+    # Minimax AI function, to cycle all posibillities
     def minimax(self, depth, isMaximizing):
         result = self.ai_winner()
 
@@ -235,15 +254,11 @@ class MyApp(App):
         for l in range(3):
             if (self.table[l][0] == self.table[l][1] == self.table[l][2]) and self.table[l][0] != 0:
                 winner = self.table[l][0]
-            
-        
 
         # Vertical
         for c in range(3):
             if (self.table[0][c] == self.table[1][c] == self.table[2][c]) and self.table[0][c] != 0:
                 winner = self.table[0][c]
-            
-        
 
         # Diagonal
         if (self.table[0][0] == self.table[1][1] == self.table[2][2]) and self.table[0][0] != 0:
@@ -251,22 +266,19 @@ class MyApp(App):
         
         if (self.table[2][0] == self.table[1][1] == self.table[0][2]) and self.table[2][0] != 0:
             winner = self.table[2][0]
-        
 
         openSpots = 0
         for l in range(3):
                 for c in range(3):
-                    if (self.table[l][c] == 0) :
+                    if (self.table[l][c] == 0):
                         openSpots += 1
-                    
             
         if (winner == None and openSpots == 0):
             return 'tie'
         else:
             return winner
         
-        
-
+    # AI difficult mode, anothe implementation, based on strategies (pending)
     def difficult_mode(self, *btns):
         strategies = [[0, 1, 2], [3, 4, 5], [6, 7, 8],
                       [0, 3, 6], [1, 4, 7], [2, 5, 8],
@@ -308,8 +320,9 @@ class MyApp(App):
                 print(best_pos)
                 print(match)
         
+        # if there is no availale strategie, chose a random spot
         if biggest_match <= 1:
-            return self.easy_mode(*btns)
+            return self.easy_mode(*btns) # choose random spot
 
         pos = best_pos
         if pos >= 0 and pos <= 2: # 1st row
@@ -327,8 +340,7 @@ class MyApp(App):
                 self.table[2][pos] = self.active_player_symbol()
                 btns[best_pos].text = self.active_player_symbol()
 
-                
-
+    # analyze the board and end the game if there is a winner of if the game results in a tie
     def analyze_moves(self):
         winners = self.analyze_winner(self.table)
         if winners[0]: # discover if a winner exists
@@ -340,7 +352,9 @@ class MyApp(App):
                              'Well done ' + winner_name + '! You have managed to snag a win out of ' +
                                loser_name + ' using the mighty ' + self.active_player_symbol())
         else:
-            if self.count_plays() == self.max_plays:
+            # find if the number of marked spots is equal to the max number of defined plays
+            # would be better to count the amount of unmarked spots
+            if self.count_plays() == self.max_plays: 
                 self.game_ended = True
                 self.popup_manager(True, 'We have managed to get a draw! ', 
                 'Neither one of the players has achieved to win, both can do better next time!')
@@ -348,6 +362,7 @@ class MyApp(App):
 
     # Function for dicovering the winner
     def analyze_winner(self, board):
+        # all strategies possible
         strategies = [[0, 1, 2], [3, 4, 5], [6, 7, 8],
                       [0, 3, 6], [1, 4, 7], [2, 5, 8],
                       [0, 4, 8], [2, 4, 6]]
