@@ -213,12 +213,12 @@ class MyApp(App):
         print(self.table)
 
     #         X, O , tie
-    scores = { 'X': 1, 'O': -1, 'tie': 0}
+    scores = { 'X': -1, 'O': 1, 'tie': 0}
 
     # Minimax AI function, to cycle all posibillities
     def minimax(self, depth, isMaximizing):
         result = self.ai_winner()
-
+        
         if result != None:
             return self.scores[result]
 
