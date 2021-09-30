@@ -53,6 +53,15 @@ Install dependencies on windows wsl:
 Related example:
   https://kivy.org/doc/stable/tutorials/pong.html
 
+Deploy the Application:
+  -> In order to deploy this application, Pyinstaller was used to create an executable file:
+    $ pip install pyinstaller -> Install pyinstaller
+    $ pyinstaller main.py --onefile -w -> Generate the executable
+    -> After following this steps, and .exe file was generated in the dist folder. That file needed to be dragged to the main.py directory, allong with the img folder and other dependencies.
+    
+    -> In order to make easier for everyone to download and install in any machine. I've used a NSIS software, wich created an executable file (tic_tac_toe.exe) wich just packs all dependencies and files into one image that can
+    be installed in any device. 
+
 # Used videos to learn about the matter
 Bibliography:
   Playlist: https://www.youtube.com/watch?v=bMHK6NDVlCM
